@@ -104,6 +104,20 @@
 
     </div>
 
+    <div style="padding:12px 15px;background:#111;border-top:1px solid #333;">
+      <div style="font-size:9px;color:#888;text-transform:uppercase;font-weight:bold;margin-bottom:8px;">📐 Размер iframe на слайде Genially</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px;">
+        <div>
+          <label style="font-size:9px;color:#666;display:block;margin-bottom:3px;">Ширина</label>
+          <input type="text" id="iframe_w" value="100%" style="background:#000;border:1px solid #444;padding:6px;color:#fff;border-radius:4px;font-size:11px;width:100%;margin:0;">
+        </div>
+        <div>
+          <label style="font-size:9px;color:#666;display:block;margin-bottom:3px;">Высота (px)</label>
+          <input type="number" id="iframe_h" value="400" style="background:#000;border:1px solid #444;padding:6px;color:#fff;border-radius:4px;font-size:11px;width:100%;margin:0;">
+        </div>
+      </div>
+      <div style="font-size:9px;color:#555;line-height:1.4;">Примеры: 100% / 400, 70% / 350. Радио масштабируется автоматически внутри iframe.</div>
+    </div>
     <div class="btn-group">
       <button class="btn-action btn-gold" id="btn-generate">ОБНОВИТЬ</button>
       <button class="btn-action btn-copy" id="btn-copy">СКОПИРОВАТЬ</button>
@@ -325,19 +339,27 @@
       '<\/script>\n</body>\n</html>';
 
     document.getElementById('preview').srcdoc = gameHtml;
+    var iW = (document.getElementById('iframe_w')||{value:'100%'}).value||'100%';
+    var iH = (document.getElementById('iframe_h')||{value:'400'}).value||'400';
     document.getElementById('hidden_output').value =
-      '<iframe srcdoc="' + escapeForSrcdoc(gameHtml) + '" width="100%" height="600" frameborder="0" style="background:transparent; overflow:hidden;"></iframe>';
+      '<iframe srcdoc="' + escapeForSrcdoc(gameHtml) + '" width="' + iW + '" height="' + iH + '" frameborder="0" style="background:transparent;display:block;overflow:hidden;"></iframe>';
   }
 
   function copyCode() {
     var t = document.getElementById('hidden_output').value;
     if (!t) { alert("Сначала нажмите ОБНОВИТЬ"); return; }
-    navigator.clipboard.writeText(t).then(function(){ alert("Код скопирован!"); });
+    navigator.clipboard.writeText(t).then(function(){
+      var btn = document.getElementById('btn-copy');
+      var orig = btn.textContent;
+      btn.textContent = '✓ СКОПИРОВАНО';
+      btn.style.background = '#2d6a2d';
+      setTimeout(function(){ btn.textContent = orig; btn.style.background = ''; }, 2000);
+    });
   }
 
   document.getElementById('btn-generate').addEventListener('click', generate);
   document.getElementById('btn-copy').addEventListener('click', copyCode);
-  document.querySelectorAll('.tab-content input').forEach(function(input) {
+  document.querySelectorAll('.tab-content input, #iframe_w, #iframe_h').forEach(function(input) {
     input.addEventListener('input', generate);
   });
 
