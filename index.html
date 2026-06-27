@@ -2,43 +2,34 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <title>Radio Signal Master: Редактор (Full Fix)</title>
+  <title>Radio Signal Master: Редактор</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Montserrat:wght@400;700&family=Oswald:wght@500&display=swap" rel="stylesheet">
   <style>
     :root{ --gold: #FFD700; --panel: #1a1a1a; --red: #e11d21; --text: #e0e0e0; }
     * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
     body, html { margin:0; height: 100%; font-family:'Montserrat', sans-serif; background: #000; color: var(--text); overflow: hidden; }
     .app-container { display: flex; height: 100vh; width: 100vw; }
-    
     .editor-side { width: 480px; min-width: 480px; background: var(--panel); border-right: 2px solid var(--red); display: flex; flex-direction: column; z-index: 1000; }
     .editor-header { padding: 15px; background: #000; border-bottom: 2px solid var(--red); text-align: center; }
     .editor-header h1 { margin: 0; font-family: 'Playfair Display', serif; font-size: 18px; color: var(--red); text-transform: uppercase; letter-spacing: 2px; }
-    
     .tab-content { flex: 1; overflow-y: auto; padding: 20px; }
     label { display: block; font-size: 9px; color: #888; text-transform: uppercase; margin-bottom: 4px; font-weight: bold; letter-spacing: 0.5px; }
     input { width: 100%; background: #000; border: 1px solid #333; padding: 8px; color: #fff; border-radius: 4px; font-size: 11px; margin-bottom: 12px; }
-    
     .group-title { font-size: 10px; font-weight: bold; margin-bottom: 10px; padding-top: 5px; border-top: 1px solid #333; }
     .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-
+    .hint { font-size: 9px; color: #666; margin: -8px 0 10px; line-height: 1.4; }
     .btn-group { display: flex; gap: 10px; padding: 15px; background: #111; border-top: 1px solid #333; }
     .btn-action { flex: 1; padding: 12px; border: none; border-radius: 4px; cursor: pointer; font-family: 'Oswald', sans-serif; font-weight: bold; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; transition: 0.2s; }
     .btn-gold { background: var(--red); color: #fff; }
     .btn-copy { background: #333; color: #fff; }
-
     .studio-footer { padding: 20px 25px; background: #000; text-align: center; border-top: 1px solid #333; margin-top: auto; display: flex; flex-direction: column; align-items: center; gap: 4px; }
     .footer-logo-img { height: 65px; width: auto; object-fit: contain; margin-bottom: 5px; }
     .footer-brand-text { font-family: 'Oswald', sans-serif; text-transform: uppercase; font-size: 12px; letter-spacing: 1.5px; color: #fff; margin: 0; }
     .footer-brand-text span { color: var(--red); }
     .footer-copyright { font-size: 8px; color: #555; margin: 0; text-transform: uppercase; }
-
     .preview-side { flex: 1; background: #050505; display: flex; flex-direction: column; padding: 15px; }
     .preview-frame-container { flex: 1; background: #000; border-radius: 8px; border: 1px solid #222; overflow: hidden; }
     iframe { width: 100%; height: 100%; border: none; }
-
-    .bg-toggle { display: flex; align-items: center; gap: 8px; margin-bottom: 15px; cursor: pointer; }
-    .bg-toggle input { width: auto; margin: 0; }
-    .bg-toggle span { font-size: 10px; font-weight: bold; color: #aaa; }
   </style>
 </head>
 <body>
@@ -46,19 +37,28 @@
   <div class="editor-side">
     <div class="editor-header"><h1>МАСТЕР РАДИО-СИГНАЛА</h1></div>
     <div class="tab-content">
+
       <label>ИЗОБРАЖЕНИЕ КОРПУСА (URL)</label><input type="text" id="cfg_body" value="1.png">
       <label>ИЗОБРАЖЕНИЕ СТРЕЛКИ (URL)</label><input type="text" id="cfg_needle" value="2.png">
       <label>ИЗОБРАЖЕНИЕ РУЧЕК (URL)</label><input type="text" id="cfg_knobs" value="3.png">
-      
+
+      <div class="group-title" style="color:#aaa">⚠️ ЭТАЛОННЫЙ РАЗМЕР КАРТИНКИ</div>
+      <p class="hint">Укажите натуральную ширину и высоту изображения корпуса в пикселях. Это нужно чтобы все размеры и позиции пересчитывались правильно при масштабировании в Genially.</p>
+      <div class="row">
+        <div><label>ШИРИНА КАРТИНКИ (px)</label><input type="number" id="ref_w" value="1000"></div>
+        <div><label>ВЫСОТА КАРТИНКИ (px)</label><input type="number" id="ref_h" value="600"></div>
+      </div>
+
       <div class="group-title" style="color:var(--gold)">1. КАЛИБРОВКА СТРЕЛКИ ШКАЛЫ</div>
       <div class="row">
         <div><label>ПОЛОЖЕНИЕ X (%)</label><input type="number" id="dial_x" value="73.7" step="0.1"></div>
         <div><label>ПОЛОЖЕНИЕ Y (%)</label><input type="number" id="dial_y" value="43" step="0.1"></div>
       </div>
       <div class="row">
-        <div><label>РАЗМЕР (PX)</label><input type="number" id="needle_size" value="33"></div>
-        <div><label>ОСЬ ВРАЩЕНИЯ Y (PX)</label><input type="number" id="pivot_y" value="103"></div>
+        <div><label>РАЗМЕР (% от ширины)</label><input type="number" id="needle_size" value="3.3" step="0.1"></div>
+        <div><label>ОСЬ ВРАЩЕНИЯ Y (% от высоты)</label><input type="number" id="pivot_y" value="17.2" step="0.1"></div>
       </div>
+      <p class="hint">Размер и ось вращения теперь задаются в % — так они масштабируются вместе с картинкой.</p>
       <div class="row">
         <div><label>МИН. УГОЛ (°)</label><input type="number" id="cfg_min" value="-30"></div>
         <div><label>МАКС. УГОЛ (°)</label><input type="number" id="cfg_max" value="15"></div>
@@ -69,51 +69,51 @@
         <div><label>X (%)</label><input type="number" id="knob_x" value="73" step="0.1"></div>
         <div><label>Y (%)</label><input type="number" id="knob_y" value="59" step="0.1"></div>
       </div>
-      <label>Размер Big (px)</label><input type="number" id="knob_size" value="109">
+      <label>РАЗМЕР (% от ширины)</label><input type="number" id="knob_size" value="10.9" step="0.1">
 
       <div class="group-title" style="color:#00d4ff">3. РУЧКА ЗВУКА (МАЛЕНЬКАЯ)</div>
       <div class="row">
         <div><label>X (%)</label><input type="number" id="vol_x" value="11" step="0.1"></div>
         <div><label>Y (%)</label><input type="number" id="vol_y" value="66" step="0.1"></div>
       </div>
-      <label>Размер Small (px)</label><input type="number" id="vol_size" value="50">
-      
+      <label>РАЗМЕР (% от ширины)</label><input type="number" id="vol_size" value="5.0" step="0.1">
+
       <div class="group-title">4. ЗВУКОВЫЕ ФАЙЛЫ</div>
       <label>Шум (mp3)</label><input type="text" id="s_noise" value="radio_noise.mp3">
-      <label>Сигнал (mp3.mp3)</label><input type="text" id="s_clean" value="voice_clean.mp3.mp3">
-      <label>Цель (˚)</label><input type="number" id="cfg_target" value="0">
+      <label>Сигнал (mp3)</label><input type="text" id="s_clean" value="voice_clean.mp3">
+      <label>Цель (°)</label><input type="number" id="cfg_target" value="0">
 
       <div class="group-title" style="color:#00ff88">5. НАСТРОЙКИ ФОНА</div>
-      <label class="bg-toggle">
-        <input type="checkbox" id="bg_transparent" onchange="generate()">
-        <span>ПРОЗРАЧНЫЙ ФОН</span>
+      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:12px;">
+        <input type="checkbox" id="bg_transparent" style="width:auto;margin:0;">
+        <span style="font-size:10px;font-weight:bold;color:#aaa;">ПРОЗРАЧНЫЙ ФОН</span>
       </label>
       <label>URL кастомного фона</label>
-      <input type="text" id="bg_custom_url" placeholder="https://..." oninput="generate()">
+      <input type="text" id="bg_custom_url" placeholder="https://...">
 
       <div class="group-title" style="color:#ff00ff">6. ПИТАНИЕ (КНОПКА И ИНДИКАТОР)</div>
       <div class="row">
-        <div><label>КНОПКА X (%)</label><input type="number" id="pwr_x" value="21.1" step="0.1" oninput="generate()"></div>
-        <div><label>КНОПКА Y (%)</label><input type="number" id="pwr_y" value="65.6" step="0.1" oninput="generate()"></div>
+        <div><label>КНОПКА X (%)</label><input type="number" id="pwr_x" value="21.1" step="0.1"></div>
+        <div><label>КНОПКА Y (%)</label><input type="number" id="pwr_y" value="65.6" step="0.1"></div>
       </div>
       <div class="row">
-        <div><label>LED X (%)</label><input type="number" id="led_x" value="21.2" step="0.1" oninput="generate()"></div>
-        <div><label>LED Y (%)</label><input type="number" id="led_y" value="60.8" step="0.1" oninput="generate()"></div>
+        <div><label>LED X (%)</label><input type="number" id="led_x" value="21.2" step="0.1"></div>
+        <div><label>LED Y (%)</label><input type="number" id="led_y" value="60.8" step="0.1"></div>
       </div>
-      <label>РАЗМЕР КНОПКИ (PX)</label><input type="number" id="pwr_size" value="42" oninput="generate()">
+      <label>РАЗМЕР КНОПКИ (% от ширины)</label><input type="number" id="pwr_size" value="4.2" step="0.1">
+
     </div>
 
     <div class="btn-group">
-      <button class="btn-action btn-gold" onclick="generate()">ОБНОВИТЬ</button>
-      <button class="btn-action btn-copy" onclick="copyCode()">СКОПИРОВАТЬ</button>
+      <button class="btn-action btn-gold" id="btn-generate">ОБНОВИТЬ</button>
+      <button class="btn-action btn-copy" id="btn-copy">СКОПИРОВАТЬ</button>
     </div>
 
     <div class="studio-footer">
-        <img src="https://raw.githubusercontent.com/VeRa422/hidden_artifacts/main/logo.png" alt="Logo" class="footer-logo-img">
-        <p class="footer-brand-text"><span>ИГРОВОЙ</span> КВАРТАЛ</p>
-        <p class="footer-copyright">© Все права защищены</p>
+      <img src="https://raw.githubusercontent.com/VeRa422/hidden_artifacts/main/logo.png" alt="Logo" class="footer-logo-img">
+      <p class="footer-brand-text"><span>ИГРОВОЙ</span> КВАРТАЛ</p>
+      <p class="footer-copyright">© Все права защищены</p>
     </div>
-
   </div>
 
   <div class="preview-side">
@@ -123,116 +123,225 @@
 </div>
 
 <script>
-  const GITHUB = "https://raw.githubusercontent.com/VeRa422/radio_set/main/";
-  const fixUrl = u => (u && (u.startsWith("http") || u.length < 5)) ? u : GITHUB + (u ? u.trim() : "");
+  var GITHUB = "https://raw.githubusercontent.com/VeRa422/radio_set/main/";
+  function fixUrl(u) { return (u && (u.startsWith("http") || u.length < 5)) ? u : GITHUB + (u ? u.trim() : ""); }
 
-  function generate() {
-    const vals = {};
-    document.querySelectorAll('.tab-content input').forEach(i => {
-      vals[i.id] = i.type === 'checkbox' ? i.checked : i.value;
-    });
-
-    let bodyBackground = "background:#000;";
-    if (vals.bg_transparent) {
-      bodyBackground = "background:transparent !important;";
-    } else if (vals.bg_custom_url.trim() !== "") {
-      bodyBackground = `background:url('${fixUrl(vals.bg_custom_url)}') center/cover no-repeat;`;
-    }
-
-    const getFinalCode = (isPreview) => `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
-      @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
-      * { box-sizing:border-box; -webkit-font-smoothing: antialiased; }
-      body, html { margin:0; padding:0; width:100%; height:100%; overflow:hidden; ${bodyBackground} font-family:'Montserrat', sans-serif; display:flex; align-items:center; justify-content:center; }
-      #radio-scene { position:relative; width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
-      #radio-wrapper { position:relative; display:inline-block; line-height: 0; width: fit-content; height: fit-content; }
-      #radio-bg { display:block; max-width:100vw; max-height:100vh; width: auto; height: auto; }
-      
-      .needle { position:absolute; left:${vals.dial_x}%; top:${vals.dial_y}%; width:${vals.needle_size}px; height:${vals.needle_size}px; background:url('${fixUrl(vals.cfg_needle)}') center/contain no-repeat; transform-origin: center calc(50% + ${vals.pivot_y}px); transform: translate(-50%, -50%) rotate(${vals.cfg_min}deg); z-index: 20; pointer-events:none; }
-      .tuning-knob { position:absolute; left:${vals.knob_x}%; top:${vals.knob_y}%; width:${vals.knob_size}px; height:${vals.knob_size}px; background:url('${fixUrl(vals.cfg_knobs)}') center/contain no-repeat; transform: translate(-50%, -50%) rotate(0deg); cursor: ns-resize; z-index: 50; }
-      .volume-knob { position:absolute; left:${vals.vol_x}%; top:${vals.vol_y}%; width:${vals.vol_size}px; height:${vals.vol_size}px; background:url('${fixUrl(vals.cfg_knobs)}') center/contain no-repeat; transform: translate(-50%, -50%) rotate(0deg); cursor: ns-resize; z-index: 51; }
-      
-      #pwr-btn { position:absolute; left:${vals.pwr_x}%; top:${vals.pwr_y}%; width:${vals.pwr_size}px; height:${vals.pwr_size}px; z-index:100; cursor:pointer; border-radius:50%; transform: translate(-50%, -50%); ${isPreview ? 'border: 2px dashed #ff00ff; background: rgba(255,0,255,0.1);' : 'background: rgba(0,0,0,0.01);'} }
-      #pwr-led { position:absolute; left:${vals.led_x}%; top:${vals.led_y}%; width:6px; height:6px; background:#222; border-radius:50%; z-index:101; transition:0.3s; transform: translate(-50%, -50%); }
-
-      .copyright { position: absolute; bottom: 12px; right: 12px; display: flex; align-items: center; gap: 6px; z-index: 500; pointer-events: none; opacity: 0.5; font-family: 'Montserrat', sans-serif; font-size: 10px; color: #fff; letter-spacing: 1px; text-transform: uppercase; font-weight: bold; }
-      .copyright img { height: 18px; width: auto; }
-    </style></head>
-    <body>
-      <div id="radio-scene">
-        <div id="radio-wrapper">
-          <img id="radio-bg" src="${fixUrl(vals.cfg_body)}">
-          <div id="pwr-led"></div><div id="pwr-btn" onclick="togglePwr()"></div>
-          <div id="needle" class="needle"></div>
-          <div id="tun-knob" class="tuning-knob"></div>
-          <div id="vol-knob" class="volume-knob"></div>
-        </div>
-
-      </div>
-      <script>
-        let nRot = ${vals.cfg_min}; let kRot = 0; let vRot = 0; let masterVol = 0.5; let pwrOn = false; let unl = false;
-        const needle = document.getElementById('needle'), tunKnob = document.getElementById('tun-knob'), volKnob = document.getElementById('vol-knob'), led = document.getElementById('pwr-led');
-        const noise = new Audio('${fixUrl(vals.s_noise)}'), clean = new Audio('${fixUrl(vals.s_clean)}');
-        noise.loop = clean.loop = true;
-
-        function togglePwr() {
-          pwrOn = !pwrOn;
-          if(!unl) { unl = true; noise.play().catch(e=>{}); clean.play().catch(e=>{}); }
-          led.style.background = pwrOn ? '#ff0000' : '#222';
-          led.style.boxShadow = pwrOn ? '0 0 5px #ff0000' : 'none';
-          if(!pwrOn) { noise.pause(); clean.pause(); } else { noise.play(); clean.play(); update(); }
-        }
-
-        function sync() {
-          const bg = document.getElementById('radio-bg'), wrap = document.getElementById('radio-wrapper');
-          if (bg.complete && bg.clientWidth > 0) { wrap.style.width = bg.clientWidth + 'px'; wrap.style.height = bg.clientHeight + 'px'; }
-        }
-        window.onload = sync; window.onresize = sync; document.getElementById('radio-bg').onload = sync;
-        setInterval(sync, 1000);
-        
-        function render() { if (pwrOn) { needle.style.transform = "translate(-50%, -50%) rotate(" + (nRot + (Math.random()-0.5)*1.5) + "deg)"; } requestAnimationFrame(render); }
-        render();
-
-        tunKnob.addEventListener('wheel', (e) => { 
-          e.preventDefault(); 
-          kRot += e.deltaY * 0.2; 
-          tunKnob.style.transform = "translate(-50%, -50%) rotate("+kRot+"deg)";
-          if(pwrOn) { 
-            nRot = Math.min(${vals.cfg_max}, Math.max(${vals.cfg_min}, nRot + e.deltaY * 0.005)); 
-            update(); 
-          } 
-        });
-        
-        volKnob.addEventListener('wheel', (e) => { 
-          e.preventDefault(); 
-          vRot += e.deltaY * 0.2; 
-          volKnob.style.transform = "translate(-50%, -50%) rotate("+vRot+"deg)";
-          if(pwrOn) { 
-            masterVol = Math.min(1, Math.max(0, masterVol - e.deltaY * 0.001)); 
-            update(); 
-          } 
-        });
-        
-        function update() { 
-          if(!pwrOn) return; 
-          let diff = Math.abs(nRot - ${vals.cfg_target}); 
-          let clarity = Math.max(0, 1 - (diff / 12)); 
-          clean.volume = clarity * masterVol; 
-          noise.volume = (1 - clarity) * masterVol; 
-        }
-      <\/script></body></html>`;
-
-    document.getElementById('preview').srcdoc = getFinalCode(true);
-    const cleanHtml = getFinalCode(false);
-    const esc = cleanHtml.replace(/"/g,'&quot;');
-    document.getElementById('hidden_output').value = `<iframe srcdoc="${esc}" width="100%" height="600" frameborder="0" style="background:transparent; overflow:hidden;"></iframe>`;
+  function safeJson(obj) {
+    return JSON.stringify(obj)
+      .replace(/</g, '\\u003c')
+      .replace(/>/g, '\\u003e')
+      .replace(/&/g, '\\u0026');
   }
 
-  function copyCode() { navigator.clipboard.writeText(document.getElementById('hidden_output').value).then(() => alert("Код скопирован!")); }
-  
-  window.onload = generate;
-  document.querySelectorAll('.tab-content input').forEach(input => {
+  function escapeForSrcdoc(html) {
+    return html.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+  }
+
+  function getVal(id) { return document.getElementById(id).value; }
+  function getNum(id) { return parseFloat(document.getElementById(id).value) || 0; }
+  function getChk(id) { return document.getElementById(id).checked; }
+
+  function generate() {
+    var bodyBackground = "background:#000;";
+    if (getChk('bg_transparent')) {
+      bodyBackground = "background:transparent !important;";
+    } else if (getVal('bg_custom_url').trim() !== "") {
+      bodyBackground = "background:url('" + fixUrl(getVal('bg_custom_url')) + "') center/cover no-repeat;";
+    }
+
+    var bodyUrl   = fixUrl(getVal('cfg_body'));
+    var needleUrl = fixUrl(getVal('cfg_needle'));
+    var knobsUrl  = fixUrl(getVal('cfg_knobs'));
+    var noiseUrl  = fixUrl(getVal('s_noise'));
+    var cleanUrl  = fixUrl(getVal('s_clean'));
+
+    // Все размеры теперь в % от ширины/высоты картинки
+    // Передаём их в JS игры, который сам пересчитает в px после загрузки картинки
+    var cfg = {
+      dialX:      getNum('dial_x'),
+      dialY:      getNum('dial_y'),
+      needleSizePct: getNum('needle_size'),  // % от ширины
+      pivotYPct:  getNum('pivot_y'),          // % от высоты
+      cfgMin:     getNum('cfg_min'),
+      cfgMax:     getNum('cfg_max'),
+      knobX:      getNum('knob_x'),
+      knobY:      getNum('knob_y'),
+      knobSizePct: getNum('knob_size'),       // % от ширины
+      volX:       getNum('vol_x'),
+      volY:       getNum('vol_y'),
+      volSizePct: getNum('vol_size'),         // % от ширины
+      pwrX:       getNum('pwr_x'),
+      pwrY:       getNum('pwr_y'),
+      pwrSizePct: getNum('pwr_size'),         // % от ширины
+      ledX:       getNum('led_x'),
+      ledY:       getNum('led_y'),
+      cfgTarget:  getNum('cfg_target')
+    };
+
+    var gameHtml = '<!DOCTYPE html>\n<html>\n<head>\n<meta charset="UTF-8">\n<style>\n' +
+      '* { box-sizing:border-box; }\n' +
+      'body,html { margin:0; padding:0; width:100%; height:100%; overflow:hidden; ' + bodyBackground + ' display:flex; align-items:center; justify-content:center; }\n' +
+      '#radio-scene { position:relative; width:100%; height:100%; display:flex; align-items:center; justify-content:center; }\n' +
+      '#radio-wrapper { position:relative; display:inline-block; line-height:0; }\n' +
+      '#radio-bg { display:block; max-width:100vw; max-height:100vh; width:auto; height:auto; }\n' +
+      '.r-elem { position:absolute; background-size:contain; background-repeat:no-repeat; background-position:center; }\n' +
+      '#pwr-led { position:absolute; width:6px; height:6px; background:#222; border-radius:50%; z-index:101; transition:0.3s; }\n' +
+      '#pwr-btn { position:absolute; z-index:100; cursor:pointer; border-radius:50%; background:rgba(0,0,0,0.01); }\n' +
+      '</style>\n</head>\n<body>\n' +
+      '<div id="radio-scene">\n' +
+      '  <div id="radio-wrapper">\n' +
+      '    <img id="radio-bg" src="' + bodyUrl + '">\n' +
+      '    <div id="pwr-led"></div>\n' +
+      '    <div id="pwr-btn"></div>\n' +
+      '    <div id="needle" class="r-elem" style="background-image:url(\'' + needleUrl + '\');z-index:20;pointer-events:none;"></div>\n' +
+      '    <div id="tun-knob" class="r-elem" style="background-image:url(\'' + knobsUrl + '\');cursor:ns-resize;z-index:50;"></div>\n' +
+      '    <div id="vol-knob" class="r-elem" style="background-image:url(\'' + knobsUrl + '\');cursor:ns-resize;z-index:51;"></div>\n' +
+      '  </div>\n' +
+      '</div>\n' +
+      '<script>\n(function(){\n' +
+      '  var CFG = ' + safeJson(cfg) + ';\n' +
+      '  var noiseUrl = ' + safeJson(noiseUrl) + ';\n' +
+      '  var cleanUrl = ' + safeJson(cleanUrl) + ';\n' +
+      '\n' +
+      '  var nRot = CFG.cfgMin;\n' +
+      '  var kRot = 0, vRot = 0, masterVol = 0.5, pwrOn = false, unlocked = false;\n' +
+      '\n' +
+      '  var bg      = document.getElementById("radio-bg");\n' +
+      '  var wrap    = document.getElementById("radio-wrapper");\n' +
+      '  var needle  = document.getElementById("needle");\n' +
+      '  var tunKnob = document.getElementById("tun-knob");\n' +
+      '  var volKnob = document.getElementById("vol-knob");\n' +
+      '  var led     = document.getElementById("pwr-led");\n' +
+      '  var pwrBtn  = document.getElementById("pwr-btn");\n' +
+      '\n' +
+      '  var noise = new Audio(noiseUrl);\n' +
+      '  var clean = new Audio(cleanUrl);\n' +
+      '  noise.loop = clean.loop = true;\n' +
+      '\n' +
+      '  // Пересчёт размеров из % в px по реальному размеру картинки\n' +
+      '  function applyLayout() {\n' +
+      '    var w = bg.clientWidth;\n' +
+      '    var h = bg.clientHeight;\n' +
+      '    if (w === 0 || h === 0) return;\n' +
+      '\n' +
+      '    wrap.style.width  = w + "px";\n' +
+      '    wrap.style.height = h + "px";\n' +
+      '\n' +
+      '    var ns  = (CFG.needleSizePct / 100) * w;\n' +
+      '    var piv = (CFG.pivotYPct    / 100) * h;\n' +
+      '    needle.style.width  = ns + "px";\n' +
+      '    needle.style.height = ns + "px";\n' +
+      '    needle.style.left   = CFG.dialX + "%";\n' +
+      '    needle.style.top    = CFG.dialY + "%";\n' +
+      '    needle.style.transformOrigin = "center calc(50% + " + piv + "px)";\n' +
+      '    needle.style.transform = "translate(-50%, -50%) rotate(" + nRot + "deg)";\n' +
+      '\n' +
+      '    var ks = (CFG.knobSizePct / 100) * w;\n' +
+      '    tunKnob.style.width  = ks + "px";\n' +
+      '    tunKnob.style.height = ks + "px";\n' +
+      '    tunKnob.style.left   = CFG.knobX + "%";\n' +
+      '    tunKnob.style.top    = CFG.knobY + "%";\n' +
+      '    tunKnob.style.transform = "translate(-50%, -50%) rotate(" + kRot + "deg)";\n' +
+      '\n' +
+      '    var vs = (CFG.volSizePct / 100) * w;\n' +
+      '    volKnob.style.width  = vs + "px";\n' +
+      '    volKnob.style.height = vs + "px";\n' +
+      '    volKnob.style.left   = CFG.volX + "%";\n' +
+      '    volKnob.style.top    = CFG.volY + "%";\n' +
+      '    volKnob.style.transform = "translate(-50%, -50%) rotate(" + vRot + "deg)";\n' +
+      '\n' +
+      '    var ps = (CFG.pwrSizePct / 100) * w;\n' +
+      '    pwrBtn.style.width  = ps + "px";\n' +
+      '    pwrBtn.style.height = ps + "px";\n' +
+      '    pwrBtn.style.left   = CFG.pwrX + "%";\n' +
+      '    pwrBtn.style.top    = CFG.pwrY + "%";\n' +
+      '    pwrBtn.style.transform = "translate(-50%, -50%)";\n' +
+      '\n' +
+      '    led.style.left      = CFG.ledX + "%";\n' +
+      '    led.style.top       = CFG.ledY + "%";\n' +
+      '    led.style.transform = "translate(-50%, -50%)";\n' +
+      '  }\n' +
+      '\n' +
+      '  bg.addEventListener("load", applyLayout);\n' +
+      '  window.addEventListener("resize", applyLayout);\n' +
+      '  setInterval(applyLayout, 500);\n' +
+      '  if (bg.complete) applyLayout();\n' +
+      '\n' +
+      '  function togglePwr() {\n' +
+      '    pwrOn = !pwrOn;\n' +
+      '    if (!unlocked) {\n' +
+      '      unlocked = true;\n' +
+      '      noise.play().catch(function(){});\n' +
+      '      clean.play().catch(function(){});\n' +
+      '    }\n' +
+      '    led.style.background = pwrOn ? "#ff0000" : "#222";\n' +
+      '    led.style.boxShadow  = pwrOn ? "0 0 5px #ff0000" : "none";\n' +
+      '    if (!pwrOn) { noise.pause(); clean.pause(); }\n' +
+      '    else { noise.play(); clean.play(); update(); }\n' +
+      '  }\n' +
+      '\n' +
+      '  function render() {\n' +
+      '    if (pwrOn) {\n' +
+      '      var w = bg.clientWidth, h = bg.clientHeight;\n' +
+      '      var ns  = (CFG.needleSizePct / 100) * w;\n' +
+      '      var piv = (CFG.pivotYPct    / 100) * h;\n' +
+      '      needle.style.transformOrigin = "center calc(50% + " + piv + "px)";\n' +
+      '      needle.style.transform = "translate(-50%, -50%) rotate(" + (nRot + (Math.random()-0.5)*1.5) + "deg)";\n' +
+      '    }\n' +
+      '    requestAnimationFrame(render);\n' +
+      '  }\n' +
+      '  render();\n' +
+      '\n' +
+      '  tunKnob.addEventListener("wheel", function(e) {\n' +
+      '    e.preventDefault();\n' +
+      '    kRot += e.deltaY * 0.2;\n' +
+      '    tunKnob.style.transform = "translate(-50%, -50%) rotate(" + kRot + "deg)";\n' +
+      '    if (pwrOn) {\n' +
+      '      nRot = Math.min(CFG.cfgMax, Math.max(CFG.cfgMin, nRot + e.deltaY * 0.005));\n' +
+      '      update();\n' +
+      '    }\n' +
+      '  });\n' +
+      '\n' +
+      '  volKnob.addEventListener("wheel", function(e) {\n' +
+      '    e.preventDefault();\n' +
+      '    vRot += e.deltaY * 0.2;\n' +
+      '    volKnob.style.transform = "translate(-50%, -50%) rotate(" + vRot + "deg)";\n' +
+      '    if (pwrOn) {\n' +
+      '      masterVol = Math.min(1, Math.max(0, masterVol - e.deltaY * 0.001));\n' +
+      '      update();\n' +
+      '    }\n' +
+      '  });\n' +
+      '\n' +
+      '  pwrBtn.addEventListener("click", togglePwr);\n' +
+      '\n' +
+      '  function update() {\n' +
+      '    if (!pwrOn) return;\n' +
+      '    var diff    = Math.abs(nRot - CFG.cfgTarget);\n' +
+      '    var clarity = Math.max(0, 1 - (diff / 12));\n' +
+      '    clean.volume = clarity * masterVol;\n' +
+      '    noise.volume = (1 - clarity) * masterVol;\n' +
+      '  }\n' +
+      '})();\n' +
+      '<\/script>\n</body>\n</html>';
+
+    document.getElementById('preview').srcdoc = gameHtml;
+    document.getElementById('hidden_output').value =
+      '<iframe srcdoc="' + escapeForSrcdoc(gameHtml) + '" width="100%" height="600" frameborder="0" style="background:transparent; overflow:hidden;"></iframe>';
+  }
+
+  function copyCode() {
+    var t = document.getElementById('hidden_output').value;
+    if (!t) { alert("Сначала нажмите ОБНОВИТЬ"); return; }
+    navigator.clipboard.writeText(t).then(function(){ alert("Код скопирован!"); });
+  }
+
+  document.getElementById('btn-generate').addEventListener('click', generate);
+  document.getElementById('btn-copy').addEventListener('click', copyCode);
+  document.querySelectorAll('.tab-content input').forEach(function(input) {
     input.addEventListener('input', generate);
   });
+
+  generate();
 </script>
 </body>
 </html>
